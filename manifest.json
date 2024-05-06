@@ -1,0 +1,69 @@
+{
+    "manifest_version": 1,
+    "name": "Arckuk sauce",
+    "description": "Various Sauce mods",
+    "author": "Nick Keat",
+    "website_url": "",
+    "version": "0.0.1",
+    "web_root": "pages",
+    "windows": [{
+        "file": "pages/event.html",
+        "id": "arckuk-event",
+        "name": "Arckuk Event Title",
+        "description": "Simple mod to show the Event Title",
+        "overlay": true,
+        "frame": false,
+        "default_bounds": {
+            "width": 0.5,
+            "height": 120
+		}
+	},
+	{
+        "file": "pages/topbar.html",
+        "id": "arckuk-topbar",
+        "name": "Arckuk Top Bar",
+        "description": "Replacement for default Zwift Speed, Distance, Elevation, Time bar",
+        "overlay": true,
+        "frame": false,
+        "default_bounds": {
+            "width": 0.5,
+            "height": 120
+		}
+	},
+	{
+        "file": "pages/powcadhr.html",
+        "id": "arckuk-powcadhr",
+        "name": "Arckuk Power Cadence HR",
+        "description": "Replacement for default Zwift Power, Cadence and HR box",
+        "overlay": true,
+        "frame": false,
+        "default_bounds": {
+            "width": 0.2,
+            "height": 120
+		}
+	},    
+    {
+        "file": "pages/powerbars.html",
+        "id": "arckuk-powerbars",
+        "name": "Arckuk Power Bars",
+        "description": "Show 5s/1m/5m/20m Power as bar chart",
+        "overlay": true,
+        "frame": false,
+        "default_bounds": {
+            "width": 0.2,
+            "height": 300
+		}
+	},
+	{
+        "file": "pages/powercurve.html",
+        "id": "arckuk-powercurve",
+        "name": "Arckuk Power Curve",
+        "description": "Show your current and peak power curve for a current activity",
+        "overlay": true,
+        "frame": false,
+        "default_bounds": {
+            "width": 0.2,
+            "height": 300
+		}
+	}]
+}
