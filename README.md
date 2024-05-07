@@ -6,18 +6,18 @@ Contains a number of mods for the excellent [Sauce for Zwift](https://github.com
 ## Mods
 
 ### Event Title:
-Shows the name of the event subgroup and brief details (course name, distance and elevation) of any event that the current watched athlete is participating in. Otherwise, shows nothing. Useful for showing the race/event details in a stream (very top middle of screenshot)
+Shows the name of the event subgroup and brief details (course name, distance and elevation) of any event that the current watched athlete is participating in. Otherwise, shows nothing - mousing over the window will show the ouline and allows right click for settings/minimise/close/resize. Useful for showing the race/event details in a stream (very top middle of screenshot)
 
 ### Top Bar:
-A replacement for the default Zwift speed / distance / elevation / time bar that appearas on the centre top of the Zwift window, with a more Sauce like look. Shows remaining distance or time for an event, and can optionally show speed in 10ths of kmh (top middle of screenshot)
+A replacement for the default Zwift speed / distance / elevation / time bar that appearas on the centre top of the Zwift window, with a more Sauce like look. Shows remaining distance or time for an event, and can optionally show speed in 10ths of kph (top middle of screenshot)
 
-### Power Cadence HR
+### Power Cadence HR:
 A replacement for the default Zwift Power, Cadence and HR box normally in the top left of the screen, can optionally also show the current draft (top left of screenshot)
 
-### Power Bars
+### Power Bars:
 A bar chart display of the current and best 1 s, 5 s, 15 s, 60 s, 5 min, 20 min and average power for the current user. 1s and average is optional. Values can be shown in Watts, or W/KG - click on the y-axis values, or tick the config setting (mid left of screenshot)
 
-### Power Graph
+### Power Graph:
 A graph of the current and best power as a function of time for the currently watched athlete - a continuously updated and evolving power curve. Values can be shown in Watts, or W/KG (lower left of screenshot)
 
 ## Installation
