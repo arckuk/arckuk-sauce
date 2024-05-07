@@ -21,7 +21,7 @@ A bar chart display of the current and best 1 s, 5 s, 15 s, 60 s, 5 min, 20 min 
 A graph of the current and best power as a function of time for the currently watched athlete - a continuously updated and evolving power curve. Values can be shown in Watts, or W/KG (lower left of screenshot)
 
 ## Installation
-Download the zip of this repository (Click green '<> Code ▼' button near the top of this screen, then 'Download ZIP'). Extract the arckuk-sauce-main folder into your SauceMods folder (the result should be Documents\SauceMods\arckuk-sauce-main\...). Restart Sauce, and enable the arckuk mods.
+Download the zip of this repository (Click green '<> Code ▾' button near the top of this screen, then 'Download ZIP'). Extract the arckuk-sauce-main folder into your SauceMods folder (the result should be Documents\SauceMods\arckuk-sauce-main\...). Restart Sauce, and enable the arckuk mods.
 ```
 Documents
 ├── ...
