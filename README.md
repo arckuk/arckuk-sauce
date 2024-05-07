@@ -1,6 +1,6 @@
 # Arckuk mods for sauce for Zwift
 
-Contains a number of mods for the excellent [Sauce for Zwift](https://github.com/SauceLLC/sauce4zwift) which might enhance your [Zwift](https://zwift.com) experience by replacing and enhancing the standard HUD. See the screenshot below:
+Contains a number of mods for the excellent [Sauce for Zwift](https://github.com/SauceLLC/sauce4zwift) which might enhance your [Zwift](https://zwift.com) experience by replacing and enhancing the standard HUD. See the screenshot below which has the standard Zwift HUD hidden (press H key in-game) and shows all the arckuk mods:
 
 ![Screenshot 2024-05-06 212120](https://github.com/arckuk/arckuk-sauce/assets/169094745/3a35a37f-edbb-464a-b983-2dd392df750e)
 ## Mods:
