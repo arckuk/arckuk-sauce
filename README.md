@@ -27,6 +27,7 @@ Documents
 ├── ...
 ├── SauceMods
 │   ├── arckuk-sauce-main
+│   │   ├ LICENSE
 │   │   ├ README.md
 │   │   ├ manifest.json
 │   │   └── pages
