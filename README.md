@@ -1,6 +1,6 @@
 # Arckuk mods for sauce for Zwift
 
-Contains a number of mods which might enhance your Zwift experience. See the screenshot below:
+Contains a number of mods for the excellent [Sauce for Zwift](https://github.com/SauceLLC/sauce4zwift) which might enhance your [Zwift](https://zwift.com) experience by replacing and enhancing the standard HUD. See the screenshot below:
 
 ![Screenshot 2024-05-06 212120](https://github.com/arckuk/arckuk-sauce/assets/169094745/3a35a37f-edbb-464a-b983-2dd392df750e)
 ## Mods:
@@ -21,15 +21,19 @@ A bar chart display of the current and best 1s, 5s, 15s, 60s, 5 min, 20 min and 
 A graph of the current and best power of the currently watched athlete over time - a continuously updated power curve (lower left of screenshot)
 
 ## Installation
-Download the zip of this repository (Click green code button above, then 'Download ZIP'). Extract the arckuk folder into your SauceMods folder (the result should be Documents\SauceMods\arckuk\...). Restart Sauce, and enable the arckuk mods.
-
+Download the zip of this repository (Click green code button above, then 'Download ZIP'). Extract the arckuk-sauce-main folder into your SauceMods folder (the result should be Documents\SauceMods\arckuk-sauce-main\...). Restart Sauce, and enable the arckuk mods.
+```
 Documents
-└── SauceMods
-    ├── arckuk-sauce-main
-                        ├ README.md
-                        ├ manifest.json
-                        ├─pages
-                              ├...
+├── ...
+├── SauceMods
+│   ├── arckuk-sauce-main
+│   │   ├ README.md
+│   │   ├ manifest.json
+│   │   └── pages
+│   │       └ ...
+│   └ ...
+└ ...
+```
 ## Configuration
-Add arckuk windows from from the Sauce settings window, each window can be right-clicked to bring up the settings/minimise/close buttons. Left-click on Event Title, Top Bar and Power Cadence HR to reload them.
+Add arckuk windows from from the Sauce settings window, each window can be right-clicked to bring up the settings/minimise/close buttons. Windows can be resized, and will generally resize their text based upon the window width. If the text is too large or small, there is a text size scale factor in each settings window. Left-click on Event Title, Top Bar and Power Cadence HR to reload them.
 
