@@ -1,126 +1,122 @@
 <!DOCTYPE html>
 <html lang="en" tabindex="0" data-settings-key="arckuk-powcadhr-settings">
-    <head>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
 
-        <title>Arckuk: Power, Cadence, HR</title>
-        
+		<title>Arckuk: Power, Cadence, HR</title>
+		
 		<script type="module">
-            import {main} from './src/powcadhr.mjs';
-            main();
-        </script>
+			import {main} from './src/powcadhr.mjs';
+			main();
+		</script>
 		<link rel="manifest" href="../manifest.json"/>
 		<link id="favicon" rel="shortcut icon" href="/pages/images/favicon.png"/>
 		<link rel="stylesheet" href="/pages/css/common.css"/>
-        <link rel="stylesheet" href="/pages/css/nearby.css"/>
+		<link rel="stylesheet" href="/pages/css/nearby.css"/>
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 		
 		<style>
-            table {
-                width: 100%;
-            }
+			table {
+				width: 100%;
+			}
 			td, th{
 				width: 20%;
 				text-align: center !important;
-                padding: 0;
-            }
-            .heavy {
-                font-weight: 800;
-                font-size: calc(var(--font-scale) * 32vw);
-                line-height: calc(var(--font-scale) * 32vw);
-            }
+				padding: 0;
+			}
+			.heavy {
+				font-weight: 800;
+				font-size: calc(var(--font-scale) * 32vw);
+				line-height: calc(var(--font-scale) * 32vw);
+			}
 			.medium {
-                font-weight: 700;
-                font-size: calc(var(--font-scale) * 11vw);
-                line-height: calc(var(--font-scale) * 11vw);
-            } 
-            .icon {
-				color: #ddd;
+				font-weight: 700;
+				font-size: calc(var(--font-scale) * 11vw);
+				line-height: calc(var(--font-scale) * 11vw);
+			} 
+			.icon {
 				font-size: calc(var(--font-scale) * 12vw);
-                line-height: calc(var(--font-scale) * 12vw);
+				line-height: calc(var(--font-scale) * 12vw);
 			}
 			.smallicon {
-				color: #ddd;
 				font-size: calc(var(--font-scale) * 6vw);
-                line-height: calc(var(--font-scale) * 6vw);
-			}  
+				line-height: calc(var(--font-scale) * 6vw);
+			}
 			.unit {
 				font-size: calc(var(--font-scale) * 6vw);
-                line-height: calc(var(--font-scale) * 5vw);
-				color: #fff;		
+				line-height: calc(var(--font-scale) * 6vw);	
 			}
-            .smallunit {
+			.smallunit {
 				font-size: calc(var(--font-scale) * 3vw);
-                line-height: calc(var(--font-scale) * 2vw);
-				color: #fff;
+				line-height: calc(var(--font-scale) * 3vw);
 			}
-            body {
-                overflow: hidden !important; /* Hide scrollbars */  
-            }
+			div {
+				overflow: hidden !important; /* Hide scrollbars */  
+			}
 			.container { 
 				justify-content: center; 
 			}
-            .hide {
-                display: none;
-            }
+			.hide {
+				display: none;
+			}
 		</style>	
-    </head>
-    <body>
-        <div id="titlebar">
-            <header>
+	</head>
+	<body>
+		<div id="titlebar">
+			<header>
 				<div class="logo"><img title="icon" src="/pages/images/icon128.png"/></div>
-                <div class="title">Arckuk Power, Cadence, HR</div>
-                <div class="filler"></div>
-                <div class="buttons">
-                    <a class="button open-settings" href="settings/powcadhr-settings.html?width=380&height=400&child-window"
-                    title="Open settings window" target="topbar-settings"><ms>settings</ms></a>
-                    <div title="Minimize" class="button minimize electron-only"><ms>minimize</ms></div>
-                    <div title="Close this window" class="button close electron-only"><ms>close</ms></div>
-                </div>
-            </header>
-        </div>	
-        <div id="content" class="container" onClick="location.reload()">
+				<div class="title">Arckuk Power, Cadence, HR</div>
+				<div class="filler"></div>
+				<div class="buttons">
+					<a class="button open-settings" href="settings/powcadhr-settings.html?width=380&height=400&child-window"
+					title="Open settings window" target="topbar-settings"><ms>settings</ms></a>
+					<div title="Minimize" class="button minimize electron-only"><ms>minimize</ms></div>
+					<div title="Close this window" class="button close electron-only"><ms>close</ms></div>
+				</div>
+			</header>
+		</div>	
+		<div id="content" class="container" onClick="location.reload()">
 			<table id="table" >
 				<tr height="30px">
 					<td colspan="3">
-                        <span class="heavy" id="power">0</span> 
-                        <div style="display:inline-block">
-                            <div><span class="material-symbols-outlined icon">electric_bolt</span></div>
-                            <div><span class="unit" id="powerunit">W</span></div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
+						<span class="heavy" id="power">0</span> 
+						<div style="display:inline-block">
+							<div><span class="material-symbols-outlined icon">electric_bolt</span></div>
+							<div><span class="unit" id="powerunit">W</span></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
 					<td>
-                        <span class="medium" id="cad">0</span>
-                        <div style="display:inline-block">
-                            <div class="material-symbols-outlined smallicon">autorenew</div>
-                            <div class="smallunit" id="cadunit">RPM</div>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="medium" id="hr">0</span>
-                        <div style="display:inline-block">
-                            <div class="material-symbols-outlined smallicon">favorite</div>
-                            <div class="smallunit" id="hrunit">BPM</div>
-                        </div>
-                    </td>
-                    <td id="draftData">
-                        <span class="medium" id="draft">0</span>
-                        <div style="display:inline-block">
-                            <div class="material-symbols-outlined smallicon">air</div>
-                            <div class="smallunit" id="draftunit">W</div>
-                        </div>
-                    </td>
+						<span class="medium" id="cad">0</span>
+						<div style="display:inline-block">
+							<div class="material-symbols-outlined smallicon">autorenew</div>
+							<div class="smallunit" id="cadunit">RPM</div>
+						</div>
+					</td>
+					<td>
+						<span class="medium" id="hr">0</span>
+						<div style="display:inline-block">
+							<div class="material-symbols-outlined smallicon">favorite</div>
+							<div class="smallunit" id="hrunit">BPM</div>
+						</div>
+					</td>
+					<td id="draftData">
+						<span class="medium" id="draft">0</span>
+						<div style="display:inline-block">
+							<div class="material-symbols-outlined smallicon">air</div>
+							<div class="smallunit" id="draftunit">W</div>
+						</div>
+					</td>
 				</tr>
 			</table>
 		</div>
-        <div id="hintbar">
-            <div class="hint"></div>
-        </div>
-    </body>
+		<div id="hintbar">
+			<div class="hint"></div>
+		</div>
+	</body>
 </html>
 

@@ -11,8 +11,8 @@ let showRoute;
 let showDistance;
 
 common.settingsStore.setDefault({
-    solidBackground: false,
-    backgroundColor: '#00ff00',
+	solidBackground: false,
+	backgroundColor: '#00ff00',
 	overlayMode: false,
 	showRoute: true,
 	showDistance: true,
@@ -20,12 +20,12 @@ common.settingsStore.setDefault({
 
 let overlayMode;
 if (window.isElectron) {
-    overlayMode = !!window.electron.context.spec.overlay;
-    doc.classList.toggle('overlay-mode', overlayMode);
-    document.querySelector('#titlebar').classList.toggle('always-visible', overlayMode !== true);
-    if (common.settingsStore.get('overlayMode') !== overlayMode) {
-        common.settingsStore.set('overlayMode', overlayMode);
-    }
+	overlayMode = !!window.electron.context.spec.overlay;
+	doc.classList.toggle('overlay-mode', overlayMode);
+	document.querySelector('#titlebar').classList.toggle('always-visible', overlayMode !== true);
+	if (common.settingsStore.get('overlayMode') !== overlayMode) {
+		common.settingsStore.set('overlayMode', overlayMode);
+	}
 }
 
 export async function main() {
@@ -37,21 +37,21 @@ export async function main() {
 	document.getElementById('eventInfo').classList.add("hidden");
 	
 	common.settingsStore.addEventListener('changed', async ev => {	
-        if (ev.data.changed.has('solidBackground') || ev.data.changed.has('backgroundColor')) {
-            setBackground();
-        } else if (ev.data.changed.has('showRoute')) {
-            showRoute = common.settingsStore.get('showRoute');
+		if (ev.data.changed.has('solidBackground') || ev.data.changed.has('backgroundColor')) {
+			setBackground();
+		} else if (ev.data.changed.has('showRoute')) {
+			showRoute = common.settingsStore.get('showRoute');
 		} else if (ev.data.changed.has('showDistance')) {
-            showDistance = common.settingsStore.get('showDistance');
+			showDistance = common.settingsStore.get('showDistance');
 		} else if (window.isElectron && ev.data.changed.has('overlayMode')) {
-            await common.rpc.updateWindow(window.electron.context.id,
-                {overlay: changed.get('overlayMode')});
-            await common.rpc.reopenWindow(window.electron.context.id);
-        }
+			await common.rpc.updateWindow(window.electron.context.id,
+				{overlay: changed.get('overlayMode')});
+			await common.rpc.reopenWindow(window.electron.context.id);
+		}
 		fillBanner();
-    });
+	});
 	
-    common.subscribe('athlete/watching', async ad => {		
+	common.subscribe('athlete/watching', async ad => {		
 		if (evsubID == null || ad.state.eventSubgroupId != evsubID) {
 			if (ad.state.eventSubgroupId == 0) {
 				evsubID = null;
@@ -62,7 +62,7 @@ export async function main() {
 			//console.log(evsubID);
 			fillBanner();
 		}		
-    });
+	});
 
 }
 
@@ -107,17 +107,17 @@ async function fillBanner() {
 }
 
 function setBackground() {
-    const {solidBackground, backgroundColor} = common.settingsStore.get();
-    doc.classList.toggle('solid-background', !!solidBackground);
-    if (solidBackground) {
-        doc.style.setProperty('--background-color', backgroundColor);
-    } else {
-        doc.style.removeProperty('--background-color');
-    }
+	const {solidBackground, backgroundColor} = common.settingsStore.get();
+	doc.classList.toggle('solid-background', !!solidBackground);
+	if (solidBackground) {
+		doc.style.setProperty('--background-color', backgroundColor);
+	} else {
+		doc.style.removeProperty('--background-color');
+	}
 }
 
 
 export async function settingsMain() {
-    common.initInteractionListeners();
-    await common.initSettingsForm('form')();
+	common.initInteractionListeners();
+	await common.initSettingsForm('form')();
 }

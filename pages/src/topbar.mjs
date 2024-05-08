@@ -33,20 +33,20 @@ const time = v => v ? (secondsToHms(num(v))) : '00:00';
 const timetogo = v => v ?  time(v) + '<span class="material-symbols-outlined togo">sports_score</span>' : '';
 
 function secondsToHms(d) {
-    d = Number(d);
-    var h = Math.floor(d / 3600);
-    var m = Math.floor(d % 3600 / 60);
-    var s = Math.floor(d % 3600 % 60);
-    var hDisplay = h > 0 ? h + ":" : "";
-    var mDisplay = m < 10 ? "0" + m + ":" : m + ":";
-    var sDisplay = s < 10 ? "0" + s : "" + s ;
-    return hDisplay + mDisplay + sDisplay; 
+	d = Number(d);
+	var h = Math.floor(d / 3600);
+	var m = Math.floor(d % 3600 / 60);
+	var s = Math.floor(d % 3600 % 60);
+	var hDisplay = h > 0 ? h + ":" : "";
+	var mDisplay = m < 10 ? "0" + m + ":" : m + ":";
+	var sDisplay = s < 10 ? "0" + s : "" + s ;
+	return hDisplay + mDisplay + sDisplay; 
 }
 
 common.settingsStore.setDefault({
 	showTenthskph: false,
-    solidBackground: false,
-    backgroundColor: '#00ff00',
+	solidBackground: false,
+	backgroundColor: '#00ff00',
 	overlayMode: false,
 	fontScale: 1,
 	showRoute: true,
@@ -55,12 +55,12 @@ common.settingsStore.setDefault({
 
 let overlayMode;
 if (window.isElectron) {
-    overlayMode = !!window.electron.context.spec.overlay;
-    doc.classList.toggle('overlay-mode', overlayMode);
-    document.querySelector('#titlebar').classList.toggle('always-visible', overlayMode !== true);
-    if (common.settingsStore.get('overlayMode') !== overlayMode) {
-        common.settingsStore.set('overlayMode', overlayMode);
-    }
+	overlayMode = !!window.electron.context.spec.overlay;
+	doc.classList.toggle('overlay-mode', overlayMode);
+	document.querySelector('#titlebar').classList.toggle('always-visible', overlayMode !== true);
+	if (common.settingsStore.get('overlayMode') !== overlayMode) {
+		common.settingsStore.set('overlayMode', overlayMode);
+	}
 }
 
 
@@ -71,36 +71,36 @@ export async function main() {
 	
 	common.settingsStore.addEventListener('changed', async ev => {	
 		const changed = ev.data.changed;
-        if (changed.has('solidBackground') || changed.has('backgroundColor')) {
-            setBackground();
+		if (changed.has('solidBackground') || changed.has('backgroundColor')) {
+			setBackground();
 		}
 		if (changed.has('showTenthskph')) {
 			showTenthskph = common.settingsStore.get('showTenthskph');
 		}
 		if (window.isElectron && changed.has('overlayMode')) {
-            await common.rpc.updateWindow(window.electron.context.id,
-                {overlay: changed.get('overlayMode')});
-            await common.rpc.reopenWindow(window.electron.context.id);
-        }   
-		console.log(changed);		
+			await common.rpc.updateWindow(window.electron.context.id,
+				{overlay: changed.get('overlayMode')});
+			await common.rpc.reopenWindow(window.electron.context.id);
+		}
+		console.log(changed);
 		render();
-    });
+	});
 	
 	common.storage.addEventListener('globalupdate', ev => {
-        if (ev.data.key === '/imperialUnits') {
-            L.setImperial(imperial = ev.data.value);
-        }
-    });
+		if (ev.data.key === '/imperialUnits') {
+			L.setImperial(imperial = ev.data.value);
+		}
+	});
 	
 	render();
 	let worldtime_old;
 
 	common.subscribe('athlete/watching', async watching => {
-        if (watching.athleteId !== athleteId) {
-            athleteId = watching.athleteId;
-            worldtime_old = 0;
+		if (watching.athleteId !== athleteId) {
+			athleteId = watching.athleteId;
+			worldtime_old = 0;
 			console.log(watching);
-        }
+		}
 		if (evsubID == null || watching.state.eventSubgroupId != evsubID) {
 			if (watching.state.eventSubgroupId == 0) {
 				evsubID = null;
@@ -111,8 +111,8 @@ export async function main() {
 		}
 		const worldtime_new = watching.state.worldTime;
 		if (!worldtime_old) {
-            worldtime_old = worldtime_new;
-        }
+			worldtime_old = worldtime_new;
+		}
 		if ((worldtime_new - worldtime_old) != 0)  {
 			worldtime_old = watching.state.worldTime;
 			document.getElementById('speed').innerHTML = spd(watching.state.speed,watching);
@@ -137,21 +137,21 @@ export async function main() {
 }
 
 function setBackground() {
-    const {solidBackground, backgroundColor} = common.settingsStore.get();
-    doc.classList.toggle('solid-background', !!solidBackground);
-    if (solidBackground) {
-        doc.style.setProperty('--background-color', backgroundColor);
-    } else {
-        doc.style.removeProperty('--background-color');
-    }
+	const {solidBackground, backgroundColor} = common.settingsStore.get();
+	doc.classList.toggle('solid-background', !!solidBackground);
+	if (solidBackground) {
+		doc.style.setProperty('--background-color', backgroundColor);
+	} else {
+		doc.style.removeProperty('--background-color');
+	}
 }
 
 function render() {
-    doc.style.setProperty('--font-scale', common.settingsStore.get('fontScale') || 1);
+	doc.style.setProperty('--font-scale', common.settingsStore.get('fontScale') || 1);
 }
 
 
 export async function settingsMain() {
-    common.initInteractionListeners();
-    await common.initSettingsForm('form#general')();
+	common.initInteractionListeners();
+	await common.initSettingsForm('form#general')();
 }

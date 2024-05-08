@@ -23,8 +23,8 @@ let gameConnection;
 common.settingsStore.setDefault({
 	refreshInterval: 1,
 	overlayMode: false,
-    solidBackground: false,
-    backgroundColor: '#00ff00',
+	solidBackground: false,
+	backgroundColor: '#00ff00',
 	fontScale: 1,
 	overlayMode: false,
 	ShowWKG: false,
@@ -92,12 +92,12 @@ let chart_options = {
 
 let overlayMode;
 if (window.isElectron) {
-    overlayMode = !!window.electron.context.spec.overlay;
-    doc.classList.toggle('overlay-mode', overlayMode);
-    document.querySelector('#titlebar').classList.toggle('always-visible', overlayMode !== true);
-    if (common.settingsStore.get('overlayMode') !== overlayMode) {
-        common.settingsStore.set('overlayMode', overlayMode);
-    }
+	overlayMode = !!window.electron.context.spec.overlay;
+	doc.classList.toggle('overlay-mode', overlayMode);
+	document.querySelector('#titlebar').classList.toggle('always-visible', overlayMode !== true);
+	if (common.settingsStore.get('overlayMode') !== overlayMode) {
+		common.settingsStore.set('overlayMode', overlayMode);
+	}
 }
 
 function resizeCharts() {
@@ -112,20 +112,20 @@ function resizeCharts() {
 }
 
 export async function main() {
-    common.initInteractionListeners();
+	common.initInteractionListeners();
 	
 	addEventListener('resize', resizeCharts);
 	
 	const gcs = await common.rpc.getGameConnectionStatus();
 	gameConnection = !!(gcs && gcs.connected);
-    doc.classList.toggle('game-connection', gameConnection);
-    common.subscribe('status', gcs => {
-        gameConnection = gcs.connected;
-        doc.classList.toggle('game-connection', gameConnection);
-    }, {source: 'gameConnection'});
-    
-    common.settingsStore.addEventListener('changed', async ev => {
-        const changed = ev.data.changed;
+	doc.classList.toggle('game-connection', gameConnection);
+	common.subscribe('status', gcs => {
+		gameConnection = gcs.connected;
+		doc.classList.toggle('game-connection', gameConnection);
+	}, {source: 'gameConnection'});
+
+	common.settingsStore.addEventListener('changed', async ev => {
+		const changed = ev.data.changed;
 		if (changed.has('fontScale')) {
 			chart.setOption({
 				textStyle: {
@@ -133,14 +133,14 @@ export async function main() {
 				}
 			})
 		}
-        if (changed.has('solidBackground') || changed.has('backgroundColor')) {
-            setBackground();
-        }
-        if (window.isElectron && changed.has('overlayMode')) {
-            await common.rpc.updateWindow(window.electron.context.id,
-                {overlay: changed.get('overlayMode')});
-            await common.rpc.reopenWindow(window.electron.context.id);
-        }
+		if (changed.has('solidBackground') || changed.has('backgroundColor')) {
+			setBackground();
+		}
+		if (window.isElectron && changed.has('overlayMode')) {
+			await common.rpc.updateWindow(window.electron.context.id,
+				{overlay: changed.get('overlayMode')});
+			await common.rpc.reopenWindow(window.electron.context.id);
+		}
 		if (changed.has('showWKG')) {
 			togglePowerUnit();
 			chart.setOption({
@@ -154,11 +154,11 @@ export async function main() {
 		}
 		if (changed.has('refreshInterval')) {
 			refreshInterval = common.settingsStore.get('refreshInterval');
-        }  
-        render();
-    });
+		}  
+		render();
+	});
 
-    let athleteId;
+	let athleteId;
 	
 	echarts.registerTheme('sauce', theme.getTheme('dynamic'));
 
@@ -178,15 +178,15 @@ export async function main() {
 			});
 		}
 	})
-	
+
 	let maxtime = 0;
 	let firsttime = 0;
 	let refreshInterval = common.settingsStore.get('refreshInterval');
 	let lastRefresh = 0;
 	let powerNow;
-    common.subscribe('athlete/watching', watching => {
-        if (watching.athleteId !== athleteId) {
-            athleteId = watching.athleteId;
+	common.subscribe('athlete/watching', watching => {
+		if (watching.athleteId !== athleteId) {
+			athleteId = watching.athleteId;
 			console.log(watching);
 			athleteWt = watching.athlete.weight;
 			x_max = 60;
@@ -197,7 +197,7 @@ export async function main() {
 			firsttime = watching.state.time;
 			maxtime = 0;
 			lastRefresh = 0;
-        }	
+		}	
 		
 		powerNow = watching.state.power;
 		if (watching.state.time > maxtime) {
@@ -240,7 +240,7 @@ export async function main() {
 			}
 			
 		}
-    });
+	});
 }
 
 function render() {
@@ -249,23 +249,23 @@ function render() {
 
 function togglePowerUnit() {
 	showWKG = !showWKG;
-    if (common.settingsStore.get('showWKG') !== showWKG) {
-        common.settingsStore.set('showWKG', showWKG);
-    }
+	if (common.settingsStore.get('showWKG') !== showWKG) {
+		common.settingsStore.set('showWKG', showWKG);
+	}
 }
 
 function setBackground() {
-    const {solidBackground, backgroundColor} = common.settingsStore.get();
-    doc.classList.toggle('solid-background', !!solidBackground);
-    if (solidBackground) {
+	const {solidBackground, backgroundColor} = common.settingsStore.get();
+	doc.classList.toggle('solid-background', !!solidBackground);
+	if (solidBackground) {
 		console.log(backgroundColor);
-        doc.style.setProperty('--background-color', backgroundColor);
-    } else {
-        doc.style.removeProperty('--background-color');
-    }
+		doc.style.setProperty('--background-color', backgroundColor);
+	}else {
+		doc.style.removeProperty('--background-color');
+	}
 }
 
 export async function settingsMain() {
-    common.initInteractionListeners();
-    await common.initSettingsForm('form')();
+	common.initInteractionListeners();
+	await common.initSettingsForm('form')();
 }
