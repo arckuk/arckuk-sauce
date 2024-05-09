@@ -23,6 +23,11 @@ common.settingsStore.setDefault({
 	backgroundColor: '#00ff00',
 	showWKG: false,
 	show1s: true,
+	show5s: true,
+	show15s: true,
+	show60s: true,
+	show5m:  true,
+	show20m: true,
 	showAve: true,
 });
 
@@ -31,7 +36,7 @@ let showWKG = common.settingsStore.get('showWKG')
 let font_base_size = 12
 let chart_options = {
 	grid: {
-		left: '12%',
+		left: '14%',
 		top: '15%',
 		right: '10%',
 		bottom: '15%'
@@ -144,8 +149,11 @@ export async function main() {
 				{overlay: changed.get('overlayMode')});
 			await common.rpc.reopenWindow(window.electron.context.id);
 		}	
-		if (changed.has('show1s') || changed.has('showAve')) {
+		if (changed.has('show1s') || changed.has('show5s') || changed.has('show15s') || changed.has('show60s') || changed.has('show5m') || changed.has('show20m') || changed.has('showAve') ) {
 			chart.setOption({
+				textStyle: {
+					fontSize: font_base_size * common.settingsStore.get('fontScale')
+				},
 				xAxis: {
 					data: getxAxisValues(),
 				}
@@ -165,7 +173,6 @@ export async function main() {
 		if (changed.has('refreshInterval')) {
 			refreshInterval = common.settingsStore.get('refreshInterval');
 		}  
-		render();
 	});
 
 	let athleteId;
@@ -202,16 +209,39 @@ export async function main() {
 			maxtime = 0;
 		}
 		
+		let curPow =[];
+		let peakPow=[];
+
 		if (watching.state.time >= maxtime + refreshInterval ) {
 			if (typeof firsttime === "undefined") {
 				let firsttime = watching.state.time;
 			}
 			maxtime = watching.state.time;
-			let curPow = [watching.stats.power.smooth[5],watching.stats.power.smooth[15],watching.stats.power.smooth[60],watching.stats.power.smooth[300],watching.stats.power.smooth[1200]];
-			let peakPow = [watching.stats.power.peaks[5].avg,watching.stats.power.peaks[15].avg,watching.stats.power.peaks[60].avg,watching.stats.power.peaks[300].avg,watching.stats.power.peaks[1200].avg];
+			curPow.length = 0;
+			peakPow.length = 0;
 			if (common.settingsStore.get('show1s') == true) {
-				curPow.unshift(watching.state.power);
-				peakPow.unshift(watching.stats.power.max);
+				curPow.push(watching.state.power);
+				peakPow.push(watching.stats.power.max);
+			};
+			if (common.settingsStore.get('show5s') == true) {
+				curPow.push(watching.stats.power.smooth[5]);
+				peakPow.push(watching.stats.power.peaks[5].avg);
+			};
+			if (common.settingsStore.get('show15s') == true) {
+				curPow.push(watching.stats.power.smooth[15]);
+				peakPow.push(watching.stats.power.peaks[15].avg);
+			};
+			if (common.settingsStore.get('show60s') == true) {
+				curPow.push(watching.stats.power.smooth[60]);
+				peakPow.push(watching.stats.power.peaks[60].avg);
+			};
+			if (common.settingsStore.get('show5m') == true) {
+				curPow.push(watching.stats.power.smooth[300]);
+				peakPow.push(watching.stats.power.peaks[300].avg);
+			};
+			if (common.settingsStore.get('show20m') == true) {
+				curPow.push(watching.stats.power.smooth[1200]);
+				peakPow.push(watching.stats.power.peaks[1200].avg);
 			};
 			if (common.settingsStore.get('showAve') == true) {
 				curPow.push(watching.stats.power.avg);
@@ -236,7 +266,6 @@ export async function main() {
 }
 
 function render() {
-	doc.style.setProperty('--font-scale', common.settingsStore.get('fontScale') || 1);
 }
 
 function togglePowerUnit() {
@@ -247,9 +276,24 @@ function togglePowerUnit() {
 }
 
 function getxAxisValues() {
-	let values  = ['5 s', '15 s', '60 s', '5 m', '20 m'];
+	let values  = [];
 	if (common.settingsStore.get('show1s') == true) {
-		values.unshift('1s');
+		values.push('1 s');
+	};
+	if (common.settingsStore.get('show5s') == true) {
+		values.push('5 s');
+	};
+	if (common.settingsStore.get('show15s') == true) {
+		values.push('15 s');
+	};
+	if (common.settingsStore.get('show60s') == true) {
+		values.push('60 s');
+	};
+	if (common.settingsStore.get('show5m') == true) {
+		values.push('5 m');
+	};
+	if (common.settingsStore.get('show20m') == true) {
+		values.push('20 m');
 	};
 	if (common.settingsStore.get('showAve') == true) {
 		values.push('ave');
