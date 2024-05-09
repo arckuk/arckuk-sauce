@@ -34,12 +34,12 @@ let showWKG = common.settingsStore.get('showWKG')
 
 const chartRefs = new Set();
 
-let font_base_size = '12';
+let font_base_size = 12;
 let x_max = 60;
 
 let chart_options = {
 	grid: {
-		left: '12%',
+		left: '14%',
 		top: '15%',
 		right: '10%',
 		bottom: '15%'
