@@ -9,6 +9,8 @@ const num = H.number;
 L.setImperial(imperial);
 let gameConnection;
 let athleteId;
+let powerNow;
+const powerArray = [];
 
 common.settingsStore.setDefault({
 	showDraft: true,
@@ -16,6 +18,8 @@ common.settingsStore.setDefault({
 	backgroundColor: '#00ff00',
 	overlayMode: false,
 	fontScale: 1,
+	powerAverage: false,
+	averageInterval: 1,
 });
 
 let overlayMode;
@@ -29,6 +33,8 @@ if (window.isElectron) {
 }
 
 export async function main() {
+	
+	let averageInterval;
 
 	common.initInteractionListeners();
 	let settings = common.settingsStore.get();
@@ -43,8 +49,7 @@ export async function main() {
 				{overlay: changed.get('overlayMode')});
 			await common.rpc.reopenWindow(window.electron.context.id);
 		}
-		if (changed.has('showDraft')) {
-
+		if (changed.has('powerAverage') || changed.has('averageInterval')) {
 		} 
 		console.log(changed);		
 		render();
@@ -57,26 +62,40 @@ export async function main() {
 	});
 	
 	render();
+
 	let worldtime_old;
+	let thisInterval;
 
 	common.subscribe('athlete/watching', async watching => {
 		if (watching.athleteId !== athleteId) {
 			athleteId = watching.athleteId;
 			worldtime_old = 0;
 			console.log(watching);
+			powerArray[0] = watching.state.power;
+			powerArray.length = 1;
 		}
 
 		const worldtime_new = watching.state.worldTime;
 		if (!worldtime_old) {
 			worldtime_old = worldtime_new;
 		}
-		if ((worldtime_new - worldtime_old) >250) {
+		if ((worldtime_new - worldtime_old) >1000) {
 			worldtime_old = worldtime_new;
-			document.getElementById('power').innerHTML = watching.state.power;
+			powerArray.unshift(watching.state.power);
+			if (powerArray.length > 10) {
+				powerArray.length = 10;
+			}
+		}
+			if (common.settingsStore.get('powerAverage') == true) {
+				thisInterval = (powerArray.length > common.settingsStore.get('averageInterval')) ? common.settingsStore.get('averageInterval') : powerArray.length;
+				document.getElementById('power').innerHTML = (((powerArray.slice(0,thisInterval)).reduce((partialSum, a) => partialSum + a, 0))/thisInterval).toFixed(0);
+			} else {
+				document.getElementById('power').innerHTML = watching.state.power;
+			}
+			
 			document.getElementById('draft').innerHTML = watching.state.draft;
 			document.getElementById('cad').innerHTML = watching.state.cadence;
 			document.getElementById('hr').innerHTML = watching.state.heartrate;
-		}
 	});
 }
 

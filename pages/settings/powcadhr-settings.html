@@ -35,6 +35,16 @@
 					<key>Show draft watts:</key>
 					<input type="checkbox" name="showDraft"/>
 				</label>
+				<label title="Should the displayed power be the average over a number of seconds?">
+					<key>Power averaging?:</key>
+					<input type="checkbox" name="powerAverage"/>
+				</label>
+				<label title="Duration of power average in seconds">
+					<key>Power average interval:</key>
+					<input type="number" name="averageInterval" min="1" max="10" step="1" style="--size: 5" data-depends-on="powerAverage"/> sec.
+					<input type="range"  name="averageInterval" min="1" max="10" step="1" data-depends-on="powerAverage"/>
+					
+				</label>
 				<label>
 					<key>Theme override:</key>
 					<select is="sauce-theme" override></select>
@@ -50,8 +60,8 @@
 				</label>
 				<label>
 					<key>Font scaling:</key>
-					<input type="range" name="fontScale" min="0.5" max="2" step="0.1"/>
 					<input type="number" name="fontScale" min="0.5" max="2" step="0.1" style="--size: 5"/>
+					<input type="range" name="fontScale" min="0.5" max="2" step="0.1"/>
 				</label>
 			<hr/>
 			</form>
