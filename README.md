@@ -15,7 +15,7 @@ A replacement for the default Zwift speed / distance / elevation / time bar that
 A replacement for the default Zwift Power, Cadence and HR box normally in the top left of the screen, can optionally also show the current draft (top left of screenshot)
 
 ### Power Bars:
-A bar chart display of the current and best 1 s, 5 s, 15 s, 60 s, 5 min, 20 min and average power for the current user. 1s and average is optional. Values can be shown in Watts, or W/KG - click on the y-axis values, or tick the config setting (mid left of screenshot)
+A bar chart display of the current and best 1 s, 5 s, 15 s, 60 s, 5 min, 20 min and average power for the current user. All power durations are options in mod settings. Values can be shown in Watts, or W/KG - click on the y-axis values, or tick the mod setting (mid left of screenshot)
 
 ### Power Graph:
 A graph of the current and best power as a function of time for the currently watched athlete - a continuously updated and evolving power curve. Values can be shown in Watts, or W/KG (lower left of screenshot)
