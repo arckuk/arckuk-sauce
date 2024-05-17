@@ -7,6 +7,7 @@ const [echarts, theme] = await Promise.all([
 
 const doc = document.documentElement;
 const dividedPower = num => (showWKG == false ? num : num/athleteWt);
+const selfAthleteData = common.rpc.getAthleteData('self');
 
 const L = sauce.locale;
 let imperial = common.storage.get('/imperialUnits');
@@ -25,13 +26,21 @@ common.settingsStore.setDefault({
 	show1s: true,
 	show5s: true,
 	show15s: true,
-	show60s: true,
+	show1m: true,
 	show5m:  true,
 	show20m: true,
 	showAve: true,
+	showBest: true,
+	bestPowerString: '\[0,0,0,0,0,0\]',
 });
 
-let showWKG = common.settingsStore.get('showWKG')
+let showWKG = common.settingsStore.get('showWKG');
+let bestPowerString = common.settingsStore.get('bestPowerString');
+const bestPower = JSON.parse(bestPowerString);
+//common.settingsStore.set('bestPowerString','\[0,0,0,0,0,0\]'); // remove  comment to reset best power stats when mod starts
+const powerDurations = ['5','15','60','300','1200'];
+const powerLabels = ['1 s','5 s','15 s','1 m','5 m','20 m','ave'];
+const showDurations = [];
 
 let font_base_size = 12
 let chart_options = {
@@ -69,6 +78,7 @@ let chart_options = {
 		triggerEvent: true,
 	},
 	series: [
+		
 		{
 			name: 'Peak',
 			type: 'bar',
@@ -80,7 +90,8 @@ let chart_options = {
 				show: true,
 				formatter: (value) => (value.data != 0 ? value.data.toFixed((showWKG == false ? 0 : 2)) : ``),
 				position: 'top',				
-			}
+			},
+			z: 20
 		},
 		{
 			name: 'Current',
@@ -91,7 +102,22 @@ let chart_options = {
 				show: true,
 				formatter: (value) => (value.data != 0 ? value.data.toFixed((showWKG == false ? 0 : 2)) : ``),
 				position: 'insideTop',				
-			}
+			},
+			z: 30
+		},
+		{
+			name: 'Best',
+			type: 'bar',
+			data: [],
+			barGap: '-100%',
+			barCategoryGap: '10%',
+			label: {
+				color: 'white',
+				show: false,
+				formatter: (value) => (value.data != 0 ? value.data.toFixed((showWKG == false ? 0 : 2)) : ``),
+				position: 'top',				
+			},
+			z: 10
 		}
 	]
 };
@@ -149,7 +175,7 @@ export async function main() {
 				{overlay: changed.get('overlayMode')});
 			await common.rpc.reopenWindow(window.electron.context.id);
 		}	
-		if (changed.has('show1s') || changed.has('show5s') || changed.has('show15s') || changed.has('show60s') || changed.has('show5m') || changed.has('show20m') || changed.has('showAve') ) {
+		if (changed.has('show1s') || changed.has('show5s') || changed.has('show15s') || changed.has('show1m') || changed.has('show5m') || changed.has('show20m') || changed.has('showAve') ) {
 			chart.setOption({
 				textStyle: {
 					fontSize: font_base_size * common.settingsStore.get('fontScale')
@@ -208,59 +234,44 @@ export async function main() {
 			firsttime = watching.state.time;
 			maxtime = 0;
 		}
+		if (selfAthleteData.athleteId == watching.athleteId) {
+			if (watching.stats.power.max > bestPower[0]) {
+				bestPower[0] = watching.stats.power.max;
+				common.settingsStore.set('bestPowerString',JSON.stringify(bestPower));
+			}
+			for (let index = 0; index < powerDurations.length; ++index) {
+				if (watching.stats.power.peaks[(powerDurations[index])].avg > bestPower[index+1]) {
+					bestPower[index+1] = watching.stats.power.peaks[powerDurations[index]].avg;
+					common.settingsStore.set('bestPowerString',JSON.stringify(bestPower)); 
+				}
+			}
+		}
 		
 		let curPow =[];
 		let peakPow=[];
+		let shownBestPow=[];
 
 		if (watching.state.time >= maxtime + refreshInterval ) {
 			if (typeof firsttime === "undefined") {
 				let firsttime = watching.state.time;
 			}
 			maxtime = watching.state.time;
-			curPow.length = 0;
-			peakPow.length = 0;
-			if (common.settingsStore.get('show1s') == true) {
-				curPow.push(watching.state.power);
-				peakPow.push(watching.stats.power.max);
-			};
-			if (common.settingsStore.get('show5s') == true) {
-				curPow.push(watching.stats.power.smooth[5]);
-				peakPow.push(watching.stats.power.peaks[5].avg);
-			};
-			if (common.settingsStore.get('show15s') == true) {
-				curPow.push(watching.stats.power.smooth[15]);
-				peakPow.push(watching.stats.power.peaks[15].avg);
-			};
-			if (common.settingsStore.get('show60s') == true) {
-				curPow.push(watching.stats.power.smooth[60]);
-				peakPow.push(watching.stats.power.peaks[60].avg);
-			};
-			if (common.settingsStore.get('show5m') == true) {
-				curPow.push(watching.stats.power.smooth[300]);
-				peakPow.push(watching.stats.power.peaks[300].avg);
-			};
-			if (common.settingsStore.get('show20m') == true) {
-				curPow.push(watching.stats.power.smooth[1200]);
-				peakPow.push(watching.stats.power.peaks[1200].avg);
-			};
-			if (common.settingsStore.get('showAve') == true) {
-				curPow.push(watching.stats.power.avg);
-			};
+
+			curPow =  [watching.state.power,     watching.stats.power.smooth[5],    watching.stats.power.smooth[15],    watching.stats.power.smooth[60],    watching.stats.power.smooth[300],    watching.stats.power.smooth[1200],   watching.stats.power.avg];
+			peakPow = [watching.stats.power.max, watching.stats.power.peaks[5].avg, watching.stats.power.peaks[15].avg, watching.stats.power.peaks[60].avg, watching.stats.power.peaks[300].avg, watching.stats.power.peaks[1200].avg];
 			const powValues = peakPow.filter(Boolean).length; // find where peakPow is undefined
 			for (let i = powValues; i < peakPow.length; i++) {
-				curPow[i] = 0; // zero current Power values where there's no peakPow (where elapsed time is < pow duration)
+				curPow[i] = null; // zero current Power values where there's no peakPow (where elapsed time is < pow duration)
 			}
 
-			chart.setOption({
-				series: [
-					{
-						data: peakPow.map(dividedPower)
-					},
-					{
-						data: curPow.map(dividedPower)
-					}
-				]
-			});
+			let showSeries = [{data: (peakPow.filter((x,i) => showDurations.includes(i))).map(dividedPower)},{data: (curPow.filter((x,i) => showDurations.includes(i))).map(dividedPower)}];
+			//if ((common.settingsStore.get('showBest') == true)) {
+			if ((common.settingsStore.get('showBest') == true) && (selfAthleteData.athleteId == watching.athleteId)) {
+				showSeries.push({data: (bestPower.filter((x,i) => showDurations.includes(i))).map(dividedPower)});
+			} else {
+				showSeries.push({data: []})
+			}
+			chart.setOption({series: showSeries});
 		}
 	});
 }
@@ -276,27 +287,35 @@ function togglePowerUnit() {
 }
 
 function getxAxisValues() {
+	showDurations.length = 0;
 	let values  = [];
 	if (common.settingsStore.get('show1s') == true) {
 		values.push('1 s');
+		showDurations.push(0);
 	};
 	if (common.settingsStore.get('show5s') == true) {
 		values.push('5 s');
+		showDurations.push(1);
 	};
 	if (common.settingsStore.get('show15s') == true) {
 		values.push('15 s');
+		showDurations.push(2);
 	};
-	if (common.settingsStore.get('show60s') == true) {
-		values.push('60 s');
+	if (common.settingsStore.get('show1m') == true) {
+		values.push('1 m');
+		showDurations.push(3);
 	};
 	if (common.settingsStore.get('show5m') == true) {
 		values.push('5 m');
+		showDurations.push(4);
 	};
 	if (common.settingsStore.get('show20m') == true) {
 		values.push('20 m');
+		showDurations.push(5);
 	};
 	if (common.settingsStore.get('showAve') == true) {
 		values.push('ave');
+		showDurations.push(6);
 	};
 return(values);
 }
