@@ -6,7 +6,7 @@ const [echarts, theme] = await Promise.all([
 ]);
 
 const doc = document.documentElement;
-const dividedPower = num => (showWKG == false ? num : num/athleteWt);
+const dividedPower = ([time,num]) => (showWKG == false ? [time,num] : [time,num/athleteWt]);
 
 const time = [];
 const power = [];
@@ -35,7 +35,6 @@ let showWKG = common.settingsStore.get('showWKG')
 const chartRefs = new Set();
 
 let font_base_size = 12;
-let x_max = 60;
 
 let chart_options = {
 	grid: {
@@ -54,17 +53,16 @@ let chart_options = {
 	tooltip: {
 		trigger: 'axis',
 		axisPointer: {
-			type: 'line' // 'shadow' as default; can also be 'line' or 'shadow'
+			type: 'line'
 		},
-		valueFormatter: (value) => (typeof value === "undefined" ? '' : value.toFixed((showWKG == false ? 0 : 2)))
+		valueFormatter: (value) => (typeof value === "undefined" ? '' : value.toFixed((showWKG == false ? 0 : 2))),
 	},
 	xAxis: {
-		data: [],
 		axisLabel: {
 			color: 'white',
 			show: true,
 		},
-		max: x_max,
+		name: "t (s)",
 	},
 	yAxis: {
 		axisLabel: {
@@ -189,7 +187,6 @@ export async function main() {
 			athleteId = watching.athleteId;
 			console.log(watching);
 			athleteWt = watching.athlete.weight;
-			x_max = 60;
 			power.length = 0;
 			time.length = 0;
 			meanpower.length = 0;
@@ -209,31 +206,21 @@ export async function main() {
 			power.unshift(powerNow);
 			let sum = 0;
 			meanpower.length = 0;
-			bestpower.push(0);
+			bestpower.push([(maxtime - firsttime),0]);
 			for (let i=0; i < power.length; i++) {
 				sum += power[i];
-				meanpower.push(sum/(i+1));
-				if (meanpower[i] > bestpower[i]) {
+				meanpower.push([time[i],sum/(i+1)]);
+				if ((meanpower[i])[1] > (bestpower[i])[1]) {
 					bestpower[i] = meanpower[i];
 				}
 			}
-			if (power.length > x_max) {
-				x_max = x_max+60;
-			}
-			console.log("watching.state.time" + watching.state.time + "lastRefresh" + lastRefresh)
+			
 			if (watching.state.time >= lastRefresh + refreshInterval) {
+				
 				chart.setOption({
-					xAxis: {
-						data: time,
-						max: x_max
-					},
 					series: [
-						{
-							data: bestpower.map(dividedPower)
-						},
-						{
-							data: meanpower.map(dividedPower)
-						}
+						{data: bestpower.map(dividedPower)},
+						{data: meanpower.map(dividedPower)}
 					]
 				});
 				lastRefresh = watching.state.time;
