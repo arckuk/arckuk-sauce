@@ -7,7 +7,7 @@ const [echarts, theme] = await Promise.all([
 
 const doc = document.documentElement;
 const dividedPower = num => (showWKG == false ? num : num/athleteWt);
-const selfAthleteData = common.rpc.getAthleteData('self');
+const selfAthleteData = await common.rpc.getAthleteData('self');
 
 const L = sauce.locale;
 let imperial = common.storage.get('/imperialUnits');
@@ -44,7 +44,7 @@ let showWKG = common.settingsStore.get('showWKG');
 const powerDurations = ['5','15','60','300','1200'];
 const powerLabels = ['1 s','5 s','15 s','1 m','5 m','20 m','ave'];
 const showDurations = [];
-const bestPowerTesting = false;
+const bestPowerTesting = true;
 let bestPower = [common.settingsStore.get('best1'),common.settingsStore.get('best5'),common.settingsStore.get('best15'),common.settingsStore.get('best60'),common.settingsStore.get('best300'),common.settingsStore.get('best1200')];
 if (bestPowerTesting == true) {
 	bestPower = [0,0,0,0,0,0]
