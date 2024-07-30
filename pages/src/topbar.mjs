@@ -29,7 +29,7 @@ const dist2 = v => {
 }
 const disttogo = v => v ? '&nbsp; ' + dist2(v) + '<span class="material-symbols-outlined togo">sports_score</span>' : '';
 const ele = v => v ? num(v) : '0';  //+ unit('m') : '-';
-const time = v => v ? (secondsToHms(num(v))) : '00:00';
+const time = v => v ? (secondsToHms(v)) : '00:00';
 const timetogo = v => v ?  time(v) + '<span class="material-symbols-outlined togo">sports_score</span>' : '';
 
 function secondsToHms(d) {
