@@ -265,7 +265,7 @@ export async function main() {
 			firsttime = watching.state.time;
 			maxtime = 0;
 		}
-		if ((selfAthleteData.athleteId == watching.athleteId) || (bestPowerTesting == true)) {
+		if ((selfAthleteData.athleteId == athleteId) || (bestPowerTesting == true)) {
 			if (watching.stats.power.max > bestPower[0]) {
 				bestPower[0] = parseInt(watching.stats.power.max);
 				common.settingsStore.set('best1',bestPower[0]);
