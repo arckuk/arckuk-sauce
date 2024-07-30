@@ -56,27 +56,34 @@
 				<label>
 					<key>Show 1 s power?:</key>
 					<input type="checkbox" name="show1s"/>
+					&nbsp;&nbsp;<input type="number" name="best1" min="0" max="2000" step="1" style="--size: 6"/> <small>(best 1 s)</small>
 				</label>
 				<label>
 					<key>Show 5 s power?:</key>
 					<input type="checkbox" name="show5s"/>
+					&nbsp;&nbsp;<input type="number" name="best5" min="0" max="2000" step="1" style="--size: 6"/> <small>(best 5 s)</small>
 				</label>
 				<label>
 					<key>Show 15 s power?:</key>
 					<input type="checkbox" name="show15s"/>
+					&nbsp;&nbsp;<input type="number" name="best15" min="0" max="2000" step="1" style="--size: 6"/> <small>(best 15 s)</small>
 				</label>
 				<label>
 					<key>Show 1 m power?:</key>
 					<input type="checkbox" name="show1m"/>
+					&nbsp;&nbsp;<input type="number" name="best60" min="0" max="2000" step="1" style="--size: 6"/> <small>(best 1 m)</small>
 				</label>
 				<label>
 					<key>Show 5 m power?:</key>
 					<input type="checkbox" name="show5m"/>
+					&nbsp;&nbsp;<input type="number" name="best300" min="0" max="2000" step="1" style="--size: 6"/> <small>(best 5 m)</small>
 				</label>
 				<label>
 					<key>Show 20 m power?:</key>
 					<input type="checkbox" name="show20m"/>
+					&nbsp;&nbsp;<input type="number" name="best1200" min="0" max="2000" step="1" style="--size: 6"/> <small>(best 20 m)</small>
 				</label>
+				
 				<label>
 					<key>Show average power?:</key>
 					<input type="checkbox" name="showAve"/>
@@ -84,6 +91,10 @@
 				<label title="Show the best power recorded by this mod for you at each duration">
 					<key>Show best power?:</key>
 					<input type="checkbox" name="showBest"/>
+				</label>
+				<label title="Maximum value for y axis (in Watts, WKG are scaled proportionally)"">
+					<key>Max y value (W):</key>
+					<input type="number" name="maxy" min="0" max="2000" step="1" /> <small>(0 for auto)</small>
 				</label>
 				<label>
 					<key>Refresh interval:</key>
