@@ -7,7 +7,11 @@ const [echarts, theme] = await Promise.all([
 
 const doc = document.documentElement;
 const dividedPower = num => (showWKG == false ? num : num/athleteWt);
-const selfAthleteData = await common.rpc.getAthleteData('self');
+
+let selfAthleteData = null; 
+do {
+	selfAthleteData = await common.rpc.getAthleteData('self');
+} while (selfAthleteData == null);
 
 const L = sauce.locale;
 let imperial = common.storage.get('/imperialUnits');
@@ -46,9 +50,7 @@ const powerLabels = ['1 s','5 s','15 s','1 m','5 m','20 m','ave'];
 const showDurations = [];
 const bestPowerTesting = true;
 let bestPower = [common.settingsStore.get('best1'),common.settingsStore.get('best5'),common.settingsStore.get('best15'),common.settingsStore.get('best60'),common.settingsStore.get('best300'),common.settingsStore.get('best1200')];
-if (bestPowerTesting == true) {
-	bestPower = [0,0,0,0,0,0]
-}
+//if (bestPowerTesting == true) {	bestPower = [0,0,0,0,0,0] }
 
 let font_base_size = 12
 let chart_options = {
@@ -166,7 +168,7 @@ export async function main() {
 		gameConnection = gcs.connected;
 		doc.classList.toggle('game-connection', gameConnection);
 	}, {source: 'gameConnection'});
-	
+
 	common.settingsStore.addEventListener('changed', async ev => {
 		const changed = ev.data.changed;
 		if (changed.has('fontScale')) {
@@ -242,8 +244,6 @@ export async function main() {
 			});
 		}
 		if (params.targetType === 'axisLabel') {
-			console.log(params.value);
-			console.log(params.value == 0 ? null : params.value)
 			chart.setOption({
 				yAxis: {
 					max: (params.value == 0 ? null : params.value)
@@ -256,7 +256,8 @@ export async function main() {
 	let maxtime = 0;
 	let firsttime = 0;
 	let refreshInterval = common.settingsStore.get('refreshInterval');
-	
+
+
 	common.subscribe('athlete/watching', watching => {
 		if (watching.athleteId !== athleteId) {
 			athleteId = watching.athleteId;
@@ -265,7 +266,8 @@ export async function main() {
 			firsttime = watching.state.time;
 			maxtime = 0;
 		}
-		if ((selfAthleteData.athleteId == athleteId) || (bestPowerTesting == true)) {
+
+		if ((selfAthleteData.athleteId == watching.athleteId) || (bestPowerTesting == true)) {
 			if (watching.stats.power.max > bestPower[0]) {
 				bestPower[0] = parseInt(watching.stats.power.max);
 				common.settingsStore.set('best1',bestPower[0]);
@@ -296,7 +298,7 @@ export async function main() {
 			}
 
 			let showSeries = [{data: (peakPow.filter((x,i) => showDurations.includes(i))).map(dividedPower)},{data: (curPow.filter((x,i) => showDurations.includes(i))).map(dividedPower)}];
-			if ((common.settingsStore.get('showBest') == true) && ( (selfAthleteData.athleteId == watching.athleteId)) || (bestPowerTesting == true)) {
+			if ((common.settingsStore.get('showBest') == true) && ( (selfAthleteData.athleteId == watching.athleteId) || (bestPowerTesting == true) ) ) {
 				showSeries.push({data: (bestPower.filter((x,i) => showDurations.includes(i))).map(dividedPower)});
 			} else {
 				showSeries.push({data: []})
