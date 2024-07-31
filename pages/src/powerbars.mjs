@@ -10,6 +10,7 @@ const dividedPower = num => (showWKG == false ? num : num/athleteWt);
 
 let selfAthleteData = null; 
 do {
+	await delay(1000);
 	selfAthleteData = await common.rpc.getAthleteData('self');
 } while (selfAthleteData == null);
 
@@ -365,4 +366,10 @@ function setBackground() {
 export async function settingsMain() {
 	common.initInteractionListeners();
 	await common.initSettingsForm('form')();
+}
+
+function delay(milliseconds){
+    return new Promise(resolve => {
+        setTimeout(resolve, milliseconds);
+    });
 }
