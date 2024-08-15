@@ -255,7 +255,6 @@ export async function main() {
 	})
 	
 	let maxtime = 0;
-	let firsttime = 0;
 	let refreshInterval = common.settingsStore.get('refreshInterval');
 
 
@@ -264,7 +263,6 @@ export async function main() {
 			athleteId = watching.athleteId;
 			console.log(watching);
 			athleteWt = watching.athlete.weight;
-			firsttime = watching.state.time;
 			maxtime = 0;
 		}
 
@@ -285,11 +283,9 @@ export async function main() {
 		let peakPow=[];
 		let shownBestPow=[];
 
-		if (watching.state.time >= maxtime + refreshInterval ) {
-			if (typeof firsttime === "undefined") {
-				let firsttime = watching.state.time;
-			}
-			maxtime = watching.state.time;
+		if (watching.state.worldTime >= maxtime + refreshInterval*1000 ) {
+
+			maxtime = watching.state.worldTime;
 
 			curPow =  [watching.state.power,     watching.stats.power.smooth[5],    watching.stats.power.smooth[15],    watching.stats.power.smooth[60],    watching.stats.power.smooth[300],    watching.stats.power.smooth[1200],   watching.stats.power.avg];
 			peakPow = [watching.stats.power.max, watching.stats.power.peaks[5].avg, watching.stats.power.peaks[15].avg, watching.stats.power.peaks[60].avg, watching.stats.power.peaks[300].avg, watching.stats.power.peaks[1200].avg];
@@ -305,6 +301,10 @@ export async function main() {
 				showSeries.push({data: []})
 			}
 			chart.setOption({series: showSeries});
+		} else {
+			if (watching.state.worldTime < maxtime) {
+				maxtime = watching.state.worldTime;
+			}
 		}
 	});
 }
