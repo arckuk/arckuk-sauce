@@ -4,7 +4,7 @@
     "description": "Various Sauce mods",
     "author": "Nick Keat",
     "website_url": "",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "web_root": "pages",
     "windows": [{
         "file": "pages/event.html",
@@ -64,6 +64,28 @@
         "default_bounds": {
             "width": 0.2,
             "height": 300
+		}
+	},	{
+        "file": "pages/input.html",
+        "id": "arckuk-input",
+        "name": "Arckuk Input",
+        "description": "Shows inputs (Power, Cadence, HR, Draft, Gradient) that govern rider speed",
+        "overlay": true,
+        "frame": false,
+        "default_bounds": {
+            "width": 0.4,
+            "height": 200
+		}
+	},	{
+        "file": "pages/output.html",
+        "id": "arckuk-output",
+        "name": "Arckuk Output",
+        "description": "Shows output (speed, distance, time, elevation) for this session",
+        "overlay": true,
+        "frame": false,
+        "default_bounds": {
+            "width": 0.2,
+            "height": 240
 		}
 	}]
 }
