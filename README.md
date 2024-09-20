@@ -5,7 +5,7 @@ Contains a number of mods for the excellent [Sauce for Zwift](https://github.com
 ![Zwift screenshot with Arckuk mods](https://github.com/user-attachments/assets/4b267e27-d1c9-407a-ae07-27b9d551d370)
 
 The following screenshot uses the Input and Output mods, rather than Top Bar and Power Cadence HR, to bring the rider's input (power, cadence heart ratem, as well as draft and road gradient) to the system to the centre of the screen, and output values (speed, distance, time, elevation to the side). 
-![Zwift screenshot with Arckuk Input and Output mods][Screenshot 2024-09-20 174612](https://github.com/user-attachments/assets/4edb2f89-7872-418f-93fe-6a88793506c8)
+![Zwift screenshot with Arckuk Input and Output mods](https://github.com/user-attachments/assets/4edb2f89-7872-418f-93fe-6a88793506c8)
 
 ## Mods
 
