@@ -8,11 +8,6 @@ const [echarts, theme] = await Promise.all([
 const doc = document.documentElement;
 const dividedPower = num => (showWKG == false ? num : num/athleteWt);
 
-let selfAthleteData = null; 
-do {
-	await delay(1000);
-	selfAthleteData = await common.rpc.getAthleteData('self');
-} while (selfAthleteData == null);
 
 const L = sauce.locale;
 let imperial = common.storage.get('/imperialUnits');
@@ -156,6 +151,13 @@ function resizeCharts() {
 		}
 	}
 }
+
+let selfAthleteData = null; 
+do {
+	await delay(1000);
+	selfAthleteData = await common.rpc.getAthleteData('self');
+} while (selfAthleteData == null);
+
 
 export async function main() {
 	common.initInteractionListeners();
