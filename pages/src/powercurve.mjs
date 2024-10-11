@@ -111,7 +111,7 @@ function resizeCharts() {
 
 export async function main() {
 	common.initInteractionListeners();
-	
+	setBackground();
 	addEventListener('resize', resizeCharts);
 	
 	const gcs = await common.rpc.getGameConnectionStatus();
