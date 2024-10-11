@@ -111,6 +111,7 @@ function resizeCharts() {
 
 export async function main() {
 	common.initInteractionListeners();
+	
 	setBackground();
 	addEventListener('resize', resizeCharts);
 	
