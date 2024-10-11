@@ -35,7 +35,7 @@ if (window.isElectron) {
 }
 
 export async function main() {
-	
+	setBackground();
 	let averageInterval;
 
 	common.initInteractionListeners();

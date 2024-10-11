@@ -29,6 +29,7 @@ if (window.isElectron) {
 }
 
 export async function main() {
+	setBackground();
 	common.initInteractionListeners();
 	
 	showRoute = common.settingsStore.get('showRoute');

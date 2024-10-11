@@ -15,6 +15,7 @@ L.setImperial(imperial);
 
 let athleteWt;
 let gameConnection;
+let athleteId;
 
 common.settingsStore.setDefault({
 	fontScale: 1,
@@ -153,15 +154,10 @@ function resizeCharts() {
 }
 
 let selfAthleteData = null; 
-do {
-	await delay(1000);
-	selfAthleteData = await common.rpc.getAthleteData('self');
-} while (selfAthleteData == null);
-
 
 export async function main() {
 	common.initInteractionListeners();
-	
+	setBackground();
 	addEventListener('resize', resizeCharts);
 	
 	const gcs = await common.rpc.getGameConnectionStatus();
@@ -226,7 +222,7 @@ export async function main() {
 		}  
 	});
 
-	let athleteId;
+	
 
 	echarts.registerTheme('sauce', theme.getTheme('dynamic'));
 
@@ -268,17 +264,21 @@ export async function main() {
 			maxtime = 0;
 		}
 
-		if ((selfAthleteData.athleteId == watching.athleteId) || (bestPowerTesting == true)) {
-			if (watching.stats.power.max > bestPower[0]) {
-				bestPower[0] = parseInt(watching.stats.power.max);
-				common.settingsStore.set('best1',bestPower[0]);
-			}
-			for (let index = 0; index < powerDurations.length; ++index) {
-				if (watching.stats.power.peaks[(powerDurations[index])].avg > bestPower[index+1]) {
-					bestPower[index+1] = parseInt(watching.stats.power.peaks[powerDurations[index]].avg);
-					common.settingsStore.set('best'+powerDurations[index],bestPower[index+1]); 
+		if (selfAthleteData != null) {
+			if ((selfAthleteData.athleteId == watching.athleteId) || (bestPowerTesting == true)) {
+				if (watching.stats.power.max > bestPower[0]) {
+					bestPower[0] = parseInt(watching.stats.power.max);
+					common.settingsStore.set('best1',bestPower[0]);
 				}
-			}
+				for (let index = 0; index < powerDurations.length; ++index) {
+					if (watching.stats.power.peaks[(powerDurations[index])].avg > bestPower[index+1]) {
+						bestPower[index+1] = parseInt(watching.stats.power.peaks[powerDurations[index]].avg);
+						common.settingsStore.set('best'+powerDurations[index],bestPower[index+1]); 
+					}
+				}
+			} 
+		} else {
+			selfAthleteData = whoamI();
 		}
 		
 		let curPow =[];
@@ -363,6 +363,12 @@ function setBackground() {
 	} else {
 		doc.style.removeProperty('--background-color');
 	}
+}
+
+async function whoamI() {
+	await delay(1000);
+	selfAthleteData = await common.rpc.getAthleteData('self');
+	return selfAthleteData;
 }
 
 export async function settingsMain() {

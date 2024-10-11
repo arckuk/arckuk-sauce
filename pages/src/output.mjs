@@ -65,7 +65,7 @@ if (window.isElectron) {
 
 
 export async function main() {
-
+	setBackground();
 	common.initInteractionListeners();
 	let settings = common.settingsStore.get();
 	
