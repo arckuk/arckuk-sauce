@@ -1,10 +1,10 @@
 {
     "manifest_version": 1,
-    "name": "Arckuk sauce",
-    "description": "Various Sauce mods",
+    "name": "Arckuk Mods",
+    "description": "Various mods to replace and enhance the standard HUD. Power/HR/cadence/draft/gradient and speed/time/distance mods. Also live power curve and power for duration charts.",
     "author": "Nick Keat",
     "website_url": "",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "web_root": "pages",
     "windows": [{
         "file": "pages/event.html",
