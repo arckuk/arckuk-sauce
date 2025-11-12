@@ -2,10 +2,10 @@
 
 Contains a number of mods for the excellent [Sauce for Zwift](https://github.com/SauceLLC/sauce4zwift) which might enhance your [Zwift](https://zwift.com) experience by replacing and enhancing the standard HUD. See the screenshot below which has the standard Zwift HUD hidden (press H key in-game) and shows arckuk mods:
 
-![Zwift screenshot with Arckuk mods](pics/screenshot_01.png)
+![Zwift screenshot with Arckuk mods](https://github.com/user-attachments/assets/38f6b962-1bf8-4b1a-bac9-961a3907a02f)
 
 The following screenshot uses the Input and Output mods, rather than Top Bar and Power Cadence HR, to bring the rider's input (power, cadence heart rate, as well as draft and road gradient) to the system to the centre of the screen, and output values (speed, distance, time, elevation to the side).  It also shows the average and current heart rate in the Power Bars window, and the active draft power up.
-![Zwift screenshot with Arckuk Input and Output mods](pics/screenshot_03.png)
+![Zwift screenshot with Arckuk Input and Output mods](https://github.com/user-attachments/assets/037e11b3-2019-438c-97d3-74d260afe52f)
 
 ## Mods
 
@@ -34,7 +34,7 @@ Show parameters which are the output of the Zwift session: speed, distance, time
 Shows the power up (Aero / Feather / Draft / Burrito etc) currently in use by the watched rider. Unfortunately there is no way to show the power up being held and available for the rider to use with information available to Sauce from Zwift.
 
 ## Installation
-Download the zip of this repository (Click the green !['<> Code ▾' button](pics/code_button.png)
+Download the zip of this repository (Click the green !['<> Code ▾' button](https://github.com/user-attachments/assets/ac8159ec-d2c9-4aa6-af97-c02b1cc8a1c0)
  button near the top of this screen, then 'Download ZIP'). Extract the arckuk-sauce-main folder into your SauceMods folder (the result should be Documents\SauceMods\arckuk-sauce-main\...). Restart Sauce, and enable the arckuk mods.
 ```
 Documents
