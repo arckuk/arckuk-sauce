@@ -4,7 +4,7 @@
     "description": "Various mods to replace and enhance the standard HUD. Power/HR/cadence/draft/gradient and speed/time/distance mods. Also live power curve and power for duration charts.",
     "author": "Nick Keat",
     "website_url": "https://github.com/arckuk/arckuk-sauce",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "web_root": "pages",
     "windows": [{
         "file": "pages/event.html",
@@ -97,6 +97,17 @@
         "default_bounds": {
             "width": 120,
             "height": 120
+		}
+	},	{
+        "file": "pages/histogram.html",
+        "id": "arckuk-histogram",
+        "name": "Arckuk Histogram",
+        "description": "Histogram(s) of heart rate, power, cadence etc",
+        "overlay": true,
+        "frame": false,
+        "default_bounds": {
+            "width": 0.2,
+            "height": 0.1
 		}
 	}]
 }
