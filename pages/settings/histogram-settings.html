@@ -30,7 +30,7 @@
 		</div>
 		<div id="settings">
 			<form id="general" class="section">
-				<div class="title">General</div>
+				<div class="title">General:</div>
 				<label>
 					<key>Font scaling:</key>
 					<input type="range" name="fontScale" min="0.5" max="2" step="0.1"/>
@@ -48,19 +48,23 @@
 					<key>Background color:</key>
 					<input type="color" name="backgroundColor" data-depends-on="solidBackground"/>
 					<input type="text" name="backgroundColor" data-depends-on="solidBackground" size="7"/>
-				</label>	
+				</label>
+				<div class="title">Axes:</div>
 				<label>
-					<key>Show WKG?:</key>
-					<input type="checkbox" name="showWKG"/>
+					<key>Show y-axis?:<input type="checkbox" name="showYAxis"/></key><key>Show  y-values?:<input type="checkbox" name="showYAxisLabels"/></key>
+				</label>                
+				<label>
+					<key>Show x-axis?:<input type="checkbox" name="showXAxis"/></key><key>Show x-values?:<input type="checkbox" name="showXAxisLabels"/></key>
 				</label>
 				<label>
-					<key>Show y-axis?:</key>
-					<input type="checkbox" name="showYAxis"/> Show  y-values?: <input type="checkbox" name="showYAxisLabels"/>
-				</label>                
+					<key>X-axis min=0:<input type="checkbox" name="setMin0"/></key><key>Max>=FTP?:<input type="checkbox" name="setMaxftp"/></key>
+				</label>
 				<label>
-					<key>Show x-axis?:</key>
-					<input type="checkbox" name="showXAxis"/> Show x-values?: <input type="checkbox" name="showXAxisLabels"/>
-				</label>                
+					<key>Show Zone key?: <input type="checkbox" name="showKey"/></key>
+				</label>
+				<label>
+					<key>Show WKG?: <input type="checkbox" name="showWKG"/></key>
+				</label>
                 <label>
                     <key>Histogram measure:</key>
                     <select name="measure">

@@ -10,10 +10,15 @@ const chartRefs = new Set();
 
 let font_base_size = 12;
 
-let MIN_HIST;
+let MIN_HIST; // actual minimum histogram value
+let histoLow; // displayed histogram low value
 let MAX_HIST;
+let histoHigh;
 // array for  0–MAX_HIST, will be resized as required
 let histoData;
+
+let binSize;
+let binCount;
 
 let ftp;
 let powerZones;
@@ -37,12 +42,17 @@ common.settingsStore.setDefault({
     showXAxis: true,
     showYAxisLabels: true,
     showXAxisLabels: true,
-    measure: 'hr'
+    measure: 'hr',
+    setMin0: false,
+    setMaxftp: false,
+    showKey: false,
 });
-
 
 let measure = common.settingsStore.get('measure')
 let refreshInterval = common.settingsStore.get('refreshInterval')
+
+let min0 = common.settingsStore.get('setMin0')
+let maxftp = common.settingsStore.get('setMaxftp')
 
 // Expand resolution as sample count grows
 // e.g. first coarse (10 bpm), later finer (2–5 bpm)
@@ -60,13 +70,36 @@ function computeHistogram() {
     const totalSamples = histoData.reduce((a, b) => a + b, 0);
     if (totalSamples === 0) return { labels: [], counts: [] };
 
-    let histoLow = Math.floor(MIN_HIST/10)*10;
-    let histoHigh = Math.ceil(MAX_HIST/10)*10;
+    // check if we need to re-size the x-axis of the graph - histoLow or histoHigh will be different, or min or max FTP setting has changed
+    let prevhistoLow = histoLow;
+    let prevhistoHigh = histoHigh;
+    histoLow = Math.floor(MIN_HIST/10)*10;
+    histoHigh = Math.ceil(MAX_HIST/10)*10;
+    if (min0) {histoLow = 0};
+    if (maxftp) {histoHigh = Math.max(ftp,Math.ceil(MAX_HIST/10)*10)};
 
+    if ( (prevhistoLow != histoLow) || (prevhistoHigh != histoHigh) ){   
+        binSize = dynamicBinSize(histoHigh-histoLow);
+        binCount = Math.ceil((histoHigh - histoLow + 1) / binSize);
 
-    const binSize = dynamicBinSize(histoHigh-histoLow);
-    const binCount = Math.ceil((histoHigh - histoLow + 1) / binSize);
-
+        // if we have powerZones, then colour code bars appropriately
+        if (powerZones !== undefined) {
+            let chartPieces = [];
+            for (let i = 0; i < powerZones.length; i++) {
+                chartPieces.push({
+                    min: ((powerZones[i].from * ftp)-histoLow)/binSize ,
+                    max: ((powerZones[i].to   * ftp)-histoLow)/binSize , 
+                    color: colors["Z"+(i+1)],
+                    label: 'Z'+(i+1) + ': ' + Math.round(powerZones[i].from * ftp)
+                })
+            }
+            if ((chartPieces.length != 0) && (chartPieces !== undefined)) {
+                chartPieces[0].min = 0;
+                chartPieces[chartPieces.length-1].max = 1000;
+                chart.setOption({visualMap: {type: 'piecewise', dimension: 0, pieces: chartPieces}});
+            }
+        }
+    }
     const counts = new Array(binCount).fill(0);
     const labels = [];
 
@@ -82,7 +115,7 @@ function computeHistogram() {
         counts[i] = sum;
 
         //labels.push(`${low}-${high}`);
-        labels.push(`${low}`);
+        labels.push(low);
     }
 
     return { labels, counts };
@@ -91,20 +124,20 @@ function computeHistogram() {
 function scheduleUpdate() {
     if (!pending) {
         pending = true;
-        //requestAnimationFrame(() => {
             updateChart();
             pending = false;
-        //});
-
     }
 }
 
 function initHisto(current) {
         MIN_HIST = 10000;
         MAX_HIST = 0;
+        histoHigh = 0;
+        histoLow = 10000;
         histoData = Array(MAX_HIST+1).fill(0);
         maxtime = 0;
         lastUpdate = 0;
+        powerZones = [];
 }
 
 // -------------------------------------------------------------
@@ -140,12 +173,12 @@ function initChart(dom) {
             splitLine: { show: false }, 
             axisLabel: { color: "#fff", show: common.settingsStore.get("showYAxisLabels")}
         },
-        series: [{
+        series: {
             type: "bar",
             barWidth: '100%',
             data: [],
-            itemStyle: { color: "#d11515ff" }
-        }]
+            itemStyle: { color: "#d11515ff" },
+        }
     };
 
     chart.setOption(option);
@@ -206,7 +239,7 @@ export async function main() {
 
     common.settingsStore.addEventListener('changed', async ev => {
         const changed = ev.data.changed;
-        console.log(ev.data.changed)
+        //console.log(ev.data.changed)
         if (changed.has('measure')) {
             measure = common.settingsStore.get('measure');
             console.log("measuring:",measure);
@@ -233,22 +266,22 @@ export async function main() {
         if (changed.has('solidBackground') || changed.has('backgroundColor')) {
             setBackground();
         }
+        if (changed.has('showKey')) {
+            chart.setOption({
+                visualMap: { show: common.settingsStore.get('showKey') }
+            })
+        }
+        if (changed.has('setMin0')) {
+            min0 = common.settingsStore.get('setMin0')
+        }
+        if (changed.has('setMaxftp')) {
+            maxftp = common.settingsStore.get('setMaxftp')
+        }
         if (window.isElectron && changed.has('overlayMode')) {
             await common.rpc.updateWindow(window.electron.context.id,
                 {overlay: changed.get('overlayMode')});
             await common.rpc.reopenWindow(window.electron.context.id);
         }
-        // if (changed.has('showWKG')) {
-        //     togglePowerUnit();
-        //     chart.setOption({
-        //         yAxis: {
-        //             name: (showWKG == false ? "W" : "WKG"),
-        //             axisLabel: {
-        //                 formatter: (value) => value.toFixed((showWKG == false ? 0 : 1))
-        //             }
-        //         }
-        //     })
-        //}
         if (changed.has('refreshInterval')) {
             refreshInterval = common.settingsStore.get('refreshInterval');
         }  
@@ -273,14 +306,17 @@ export async function main() {
 
         if (watching.athleteId !== athleteId) {
             athleteId = watching.athleteId;     
+            initHisto()
             MIN_HIST = current;
             MAX_HIST = current;
             histoData = Array(MAX_HIST+1).fill(0);
             maxtime = 0;
-            console.log(watching);
-            ftp = watching.athlete.ftp
-            common.rpc.getPowerZones(1).then(zones =>{ powerZones = zones; colors = common.getPowerZoneColors(powerZones)});
-            console.log(powerZones, colors);
+            console.log("Athlete:\n",watching);
+            ftp = watching.athlete.ftp;
+            //console.log("ftp",ftp);
+            getZones();
+            //console.log(powerZones);
+            scheduleUpdate();
         }
         
         if (watching.state.time > maxtime ) {
@@ -298,11 +334,10 @@ export async function main() {
                 if (maxtime >= lastUpdate + refreshInterval) {
                     lastUpdate = maxtime;
                     scheduleUpdate();
-                    
                 }
                            
             }
-            console.log(measure, MIN_HIST, MAX_HIST, current,histoData[current]);
+            //console.log(measure, MIN_HIST, MAX_HIST, current,histoData[current]);
         }
     });
     
@@ -322,6 +357,23 @@ function setBackground() {
     }else {
         doc.style.removeProperty('--background-color');
     }
+}
+
+async function getZones() {
+    await common.rpc.getPowerZones(1).then(zones =>{ powerZones = zones; colors = common.getPowerZoneColors(powerZones)});
+    console.log("PowerZones and Colors:\n",powerZones, colors);
+    chart.setOption({
+        visualMap: {
+            type: 'piecewise',
+            dimension: 0,
+            textStyle: {color: 'white'},
+            pieces: {min:0 , max:1000,  color: 'white'},
+            showLabel: true,
+            right: 10,
+            top: 'top',
+            show: false,
+        }
+    });
 }
 
 export async function settingsMain() {
