@@ -55,7 +55,7 @@ let chart_options = {
 	grid: {
 		left: '14%',
 		top: '15%',
-		right: '10%',
+		right: '14%',
 		bottom: '15%'
 	},
 	textStyle: {
@@ -74,12 +74,14 @@ let chart_options = {
 		axisLabel: {
 			color: 'white',
 			show: true,
+			fontSize: font_base_size * common.settingsStore.get('fontScale')
 		},
 	},
 	yAxis: [{
 		axisLabel: {
 			color: 'white',
 			show: true,
+			fontSize: font_base_size * common.settingsStore.get('fontScale')
 		},
 		min: 0,
 		name: (showWKG == false ? "W" : "WKG"),
@@ -89,6 +91,7 @@ let chart_options = {
 	{
 		axisLabel: {
 			color: 'white',
+			fontSize: font_base_size * common.settingsStore.get('fontScale')
 		},
    		splitLine: { show: false }, 
 		min: 0,
@@ -106,6 +109,7 @@ let chart_options = {
 			barCategoryGap: '10%',
 			label: {
 				color: 'white',
+				fontSize: font_base_size * common.settingsStore.get('fontScale'),
 				show: true,
 				formatter: (value) => (value.data != 0 ? value.data.toFixed((showWKG == false ? 0 : 2)) : ``),
 				position: 'top',				
@@ -118,6 +122,7 @@ let chart_options = {
 			data: [],
 			label: {
 				color: 'black',
+				fontSize: font_base_size * common.settingsStore.get('fontScale'),
 				show: true,
 				formatter: (value) => (value.data != 0 ? value.data.toFixed((showWKG == false ? 0 : 2)) : ``),
 				position: 'insideTop',				
@@ -132,6 +137,7 @@ let chart_options = {
 			barCategoryGap: '10%',
 			label: {
 				color: 'white',
+				fontSize: font_base_size * common.settingsStore.get('fontScale'),
 				show: false,
 				formatter: (value) => (value.data != 0 ? value.data.toFixed((showWKG == false ? 0 : 2)) : ``),
 				position: 'top',				
@@ -144,9 +150,10 @@ let chart_options = {
 			data: [],
 			yAxisIndex: 1,
 			show: false,
-			color: 'red',
+			color: '#ff2222',
 			label: {
 				color: 'black',
+				fontSize: font_base_size * common.settingsStore.get('fontScale'),
 				show: true,
 				position: 'insideTop',				
 			},
@@ -161,6 +168,7 @@ let chart_options = {
 			color: 'darkred',
 			label: {
 				color: 'white',
+				fontSize: font_base_size * common.settingsStore.get('fontScale'),
 				show: true,
 				position: 'top',				
 			},
@@ -213,7 +221,23 @@ export async function main() {
 			chart.setOption({
 				textStyle: {
 					fontSize: font_base_size * common.settingsStore.get('fontScale')
-				}
+				},
+				xAxis: {
+					axisLabel: {
+						fontSize: font_base_size * common.settingsStore.get('fontScale')
+					}
+				},
+				yAxis: [ 
+					{axisLabel: {fontSize: font_base_size * common.settingsStore.get('fontScale')}},
+					{axisLabel: {fontSize: font_base_size * common.settingsStore.get('fontScale')}}
+				],
+				series: [
+					{label: { fontSize: font_base_size * common.settingsStore.get('fontScale') }},
+					{label: { fontSize: font_base_size * common.settingsStore.get('fontScale') }},
+					{label: { fontSize: font_base_size * common.settingsStore.get('fontScale') }},
+					{label: { fontSize: font_base_size * common.settingsStore.get('fontScale') }},
+					{label: { fontSize: font_base_size * common.settingsStore.get('fontScale') }},
+				]
 			})
 		} 
 		if (changed.has('solidBackground') || changed.has('backgroundColor')) {
