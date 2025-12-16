@@ -44,15 +44,18 @@ common.settingsStore.setDefault({
     showXAxisLabels: true,
     measure: 'hr',
     setMin0: false,
+    showZones: true,
     setMaxftp: false,
     showKey: false,
 });
 
 let measure = common.settingsStore.get('measure')
 let refreshInterval = common.settingsStore.get('refreshInterval')
+let updateHisto = false
 
 let min0 = common.settingsStore.get('setMin0')
 let maxftp = common.settingsStore.get('setMaxftp')
+let showZones = common.settingsStore.get('showZones')
 
 // Expand resolution as sample count grows
 // e.g. first coarse (10 bpm), later finer (2–5 bpm)
@@ -76,14 +79,16 @@ function computeHistogram() {
     histoLow = Math.floor(MIN_HIST/10)*10;
     histoHigh = Math.ceil(MAX_HIST/10)*10;
     if (min0) {histoLow = 0};
-    if (maxftp) {histoHigh = Math.max(ftp,Math.ceil(MAX_HIST/10)*10)};
+    if (maxftp && measure == 'power') {histoHigh = Math.max(ftp,Math.ceil(MAX_HIST/10)*10)};
 
-    if ( (prevhistoLow != histoLow) || (prevhistoHigh != histoHigh) ){   
+    if ( (prevhistoLow != histoLow) || (prevhistoHigh != histoHigh) || updateHisto ){   
+        updateHisto = false;
         binSize = dynamicBinSize(histoHigh-histoLow);
         binCount = Math.ceil((histoHigh - histoLow + 1) / binSize);
 
         // if we have powerZones, then colour code bars appropriately
-        if (powerZones !== undefined) {
+        if ((powerZones !== undefined) && (measure == 'power') && (showZones == true)) {
+
             let chartPieces = [];
             for (let i = 0; i < powerZones.length; i++) {
                 chartPieces.push({
@@ -95,9 +100,11 @@ function computeHistogram() {
             }
             if ((chartPieces.length != 0) && (chartPieces !== undefined)) {
                 chartPieces[0].min = 0;
-                chartPieces[chartPieces.length-1].max = 1000;
+                chartPieces[chartPieces.length-1].max = 5000;
                 chart.setOption({visualMap: {type: 'piecewise', dimension: 0, pieces: chartPieces}});
             }
+        } else {
+            chart.setOption({visualMap: {type: 'piecewise', dimension:0 , pieces:[{ 'gte': 0, 'color': '#d11515ff' }]}});
         }
     }
     const counts = new Array(binCount).fill(0);
@@ -242,11 +249,12 @@ export async function main() {
         //console.log(ev.data.changed)
         if (changed.has('measure')) {
             measure = common.settingsStore.get('measure');
-            console.log("measuring:",measure);
+            console.log("Measuring:",measure);
             MIN_HIST = 10000;
             MAX_HIST = 0;
             histoData = Array(MAX_HIST+1).fill(0);
             maxtime = 0;;
+            updateHisto = true;
             scheduleUpdate();
             chart.setOption({ xAxis: {name: common.settingsStore.get("measure").substring(0,3) } })
         }
@@ -265,6 +273,10 @@ export async function main() {
         }
         if (changed.has('solidBackground') || changed.has('backgroundColor')) {
             setBackground();
+        }
+        if (changed.has('showZones')) {
+            showZones = common.settingsStore.get('showZones')
+            updateHisto = true;
         }
         if (changed.has('showKey')) {
             chart.setOption({
@@ -293,7 +305,7 @@ export async function main() {
 
 
     common.subscribe('athlete/watching', watching => {
-
+        updateHisto = true;
         if(measure == 'hr') {
             current = watching.state.heartrate;
         }
