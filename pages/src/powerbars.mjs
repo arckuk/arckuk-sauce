@@ -19,6 +19,7 @@ let athleteId;
 
 common.settingsStore.setDefault({
 	fontScale: 1,
+	graphPadding: 1,
 	refreshInterval: 1,
 	overlayMode: false,
 	solidBackground: false,
@@ -50,13 +51,14 @@ const bestPowerTesting = false;
 let bestPower = [common.settingsStore.get('best1'),common.settingsStore.get('best5'),common.settingsStore.get('best15'),common.settingsStore.get('best60'),common.settingsStore.get('best300'),common.settingsStore.get('best1200')];
 //if (bestPowerTesting == true) {	bestPower = [0,0,0,0,0,0] }
 
-let font_base_size = 12
+let font_base_size = 12;
+let paddingBase = 32;
 let chart_options = {
 	grid: {
-		left: '14%',
-		top: '15%',
-		right: '14%',
-		bottom: '15%'
+		left: paddingBase * common.settingsStore.get('graphPadding'),
+		top: paddingBase * common.settingsStore.get('graphPadding'),
+		right: paddingBase * common.settingsStore.get('graphPadding'),
+		bottom: paddingBase * common.settingsStore.get('graphPadding')
 	},
 	textStyle: {
 		fontSize: font_base_size * common.settingsStore.get('fontScale')
@@ -239,7 +241,17 @@ export async function main() {
 					{label: { fontSize: font_base_size * common.settingsStore.get('fontScale') }},
 				]
 			})
-		} 
+		}
+		if (changed.has('graphPadding')) {
+			chart.setOption({
+				grid: {
+					left: paddingBase * common.settingsStore.get('graphPadding'),
+					top: paddingBase * common.settingsStore.get('graphPadding'),
+					right: paddingBase * common.settingsStore.get('graphPadding'),
+					bottom: paddingBase * common.settingsStore.get('graphPadding')
+				}
+			})
+		}
 		if (changed.has('solidBackground') || changed.has('backgroundColor')) {
 			setBackground();
 		}
