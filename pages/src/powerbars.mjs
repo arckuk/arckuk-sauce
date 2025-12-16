@@ -45,7 +45,7 @@ common.settingsStore.setDefault({
 
 let showWKG = common.settingsStore.get('showWKG');
 const powerDurations = ['5','15','60','300','1200'];
-const powerLabels = ['1 s','5 s','15 s','1 m','5 m','20 m','ave','HR'];
+const powerLabels = ['1s','5s','15s','1m','5m','20m','ave','HR'];
 const showDurations = [];
 const bestPowerTesting = false;
 let bestPower = [common.settingsStore.get('best1'),common.settingsStore.get('best5'),common.settingsStore.get('best15'),common.settingsStore.get('best60'),common.settingsStore.get('best300'),common.settingsStore.get('best1200')];
