@@ -34,7 +34,7 @@ Show parameters which are the output of the Zwift session: speed, distance, time
 Shows the power up (Aero / Feather / Draft / Burrito etc) currently in use by the watched rider. Unfortunately there is no way to show the power up being held and available for the rider to use with information available to Sauce from Zwift.
 
 ### Histogram
-Shows a histogram of either power, heart rate or cadence of the currently viewed rider.
+Shows a histogram of either power, heart rate or cadence of the currently viewed rider. Power histogram can be colour coded with power zones.
 
 ## Installation
 Download the zip of this repository (Click the green !['<> Code ▾' button](https://github.com/user-attachments/assets/ac8159ec-d2c9-4aa6-af97-c02b1cc8a1c0)
