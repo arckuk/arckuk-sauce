@@ -44,18 +44,20 @@ common.settingsStore.setDefault({
     showXAxisLabels: true,
     measure: 'hr',
     setMin0: false,
+    xMin: 0,
     showZones: true,
     setMaxftp: false,
     showKey: false,
 });
 
-let measure = common.settingsStore.get('measure')
-let refreshInterval = common.settingsStore.get('refreshInterval')
-let updateHisto = false
+let measure = common.settingsStore.get('measure');
+let refreshInterval = common.settingsStore.get('refreshInterval');
+let updateHisto = false;
 
-let min0 = common.settingsStore.get('setMin0')
-let maxftp = common.settingsStore.get('setMaxftp')
-let showZones = common.settingsStore.get('showZones')
+let min0 = common.settingsStore.get('setMin0');
+let maxftp = common.settingsStore.get('setMaxftp');
+let showZones = common.settingsStore.get('showZones');
+let xMin = common.settingsStore.get('xMin');
 
 // Expand resolution as sample count grows
 // e.g. first coarse (10 bpm), later finer (2–5 bpm)
@@ -79,6 +81,7 @@ function computeHistogram() {
     histoLow = Math.floor(MIN_HIST/10)*10;
     histoHigh = Math.ceil(MAX_HIST/10)*10;
     if (min0) {histoLow = 0};
+    if ((!min0) && (xMin != 0)) {histoLow = xMin};
     if (maxftp && measure == 'power') {histoHigh = Math.max(ftp,Math.ceil(MAX_HIST/10)*10)};
 
     if ( (prevhistoLow != histoLow) || (prevhistoHigh != histoHigh) || updateHisto ){   
@@ -285,6 +288,9 @@ export async function main() {
         }
         if (changed.has('setMin0')) {
             min0 = common.settingsStore.get('setMin0')
+        }
+        if (changed.has('xMin')){
+            xMin = common.settingsStore.get('xMin');
         }
         if (changed.has('setMaxftp')) {
             maxftp = common.settingsStore.get('setMaxftp')
