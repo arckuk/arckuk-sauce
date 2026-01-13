@@ -38,9 +38,9 @@ Shows a histogram of either power, heart rate or cadence of the currently viewed
 
 ## Installation
 
-# For most users: this mod is available in the Sauce for Zwift mod store - open settings in Sauce, and click the mods tab and then the mod store link.
+### For most users: this mod is available in the Sauce for Zwift mod store - open settings in Sauce, and click the mods tab and then the mod store link.
 
-# For people who want to do things the hard way, the mod can be installed locally from this github:
+### For people who want to do things the hard way, the mod can be installed locally from this github:
 Download the zip of this repository (Click the green !['<> Code ▾' button](https://github.com/user-attachments/assets/ac8159ec-d2c9-4aa6-af97-c02b1cc8a1c0)
  button near the top of this screen, then 'Download ZIP'). Extract the arckuk-sauce-main folder into your SauceMods folder (the result should be Documents\SauceMods\arckuk-sauce-main\...). Restart Sauce, and enable the arckuk mods.
 ```
