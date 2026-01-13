@@ -6,7 +6,8 @@ const [echarts, theme] = await Promise.all([
 ]);
 
 const doc = document.documentElement;
-const dividedPower = ([time,num]) => (showWKG == false ? [time,num] : [time,num/athleteWt]);
+const dividedPower = num => (showWKG == false ? num : num/athleteWt);
+const dividedPowerCurve = ([time,num]) => (showWKG == false ? [time,num] : [time,num/athleteWt]);
 
 const time = [];
 const power = [];
@@ -28,6 +29,7 @@ common.settingsStore.setDefault({
 	fontScale: 1,
 	overlayMode: false,
 	ShowWKG: false,
+	maxy: 0,
 });
 
 let showWKG = common.settingsStore.get('showWKG')
@@ -71,6 +73,8 @@ let chart_options = {
 		},
 		name: (showWKG == false ? "W" : "WKG"),
 		triggerEvent: true,
+		min: 0,
+		max: Number(common.settingsStore.get('maxy')) == 0 ? null : Number(dividedPower(common.settingsStore.get('maxy'))),
 	},
 	series: [
 		{
@@ -151,6 +155,15 @@ export async function main() {
 				}
 			})
 		}
+		if (changed.has('maxy')) {
+			chart.setOption({
+				yAxis: [{},
+					{
+						max: Number(common.settingsStore.get('maxy')) == 0 ? null : Number(dividedPower(common.settingsStore.get('maxy')))
+					},
+				]
+			})
+		}
 		if (changed.has('refreshInterval')) {
 			refreshInterval = common.settingsStore.get('refreshInterval');
 		}  
@@ -165,17 +178,26 @@ export async function main() {
 	chartRefs.add(new WeakRef(chart));
 	chart.setOption(chart_options);
 	chart.on('click', params => { 
-		if ((params.targetType === 'axisName') || (params.targetType === 'axisLabel')) {
+		if ((params.targetType === 'axisName')) {
 			togglePowerUnit();
 			chart.setOption({
 				yAxis: {
 					name: (showWKG == false ? "W" : "WKG"),
 					axisLabel: {
 						formatter: (value) => value.toFixed((showWKG == false ? 0 : 1))
-					}
+					},
+					max: Number(common.settingsStore.get('maxy')) == 0 ? null : dividedPower(Number(common.settingsStore.get('maxy'))),
 				},
 			});
 		}
+		if (params.targetType === 'axisLabel') {
+			chart.setOption({
+				yAxis: {
+					max: (params.value == 0 ? null : params.value)
+				},
+			});
+			common.settingsStore.set('maxy',params.value * (showWKG == false ? 1 : athleteWt) );
+		};
 	})
 
 	let maxtime = 0;
@@ -220,8 +242,8 @@ export async function main() {
 				
 				chart.setOption({
 					series: [
-						{data: bestpower.map(dividedPower)},
-						{data: meanpower.map(dividedPower)}
+						{data: bestpower.map(dividedPowerCurve)},
+						{data: meanpower.map(dividedPowerCurve)}
 					]
 				});
 				lastRefresh = watching.state.time;
