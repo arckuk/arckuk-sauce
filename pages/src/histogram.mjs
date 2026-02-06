@@ -82,7 +82,8 @@ function computeHistogram() {
     histoLow = Math.floor(MIN_HIST/10)*10;
     histoHigh = Math.ceil(MAX_HIST/10)*10;
     if (min0) {histoLow = 0};
-    if ((!min0) && (xMin != 0)) {histoLow = xMin};
+    if ((!min0) && (xMin != 0) && (xMin < histoHigh) &&(!(isNaN(xMin)))) {histoLow = Math.max(xMin,histoLow)};
+    console.log(histoLow);
     if (maxftp && measure == 'power') {histoHigh = Math.max(ftp,Math.ceil(MAX_HIST/10)*10)};
 
     if ( (prevhistoLow != histoLow) || (prevhistoHigh != histoHigh) || updateHisto ){   
