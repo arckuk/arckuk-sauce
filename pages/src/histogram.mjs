@@ -29,6 +29,7 @@ let chart;
 let pending = false;
 let maxtime = 0;
 let lastUpdate = 0;
+let prevAthleteTime;
 
 common.settingsStore.setDefault({
     refreshInterval: 1,
@@ -133,7 +134,7 @@ function computeHistogram() {
 
 function scheduleUpdate() {
     if (!pending) {
-        pending = true;
+        pending = true;     
             updateChart();
             pending = false;
     }
@@ -321,15 +322,15 @@ export async function main() {
         if(measure == 'cadence') {
             current = watching.state.cadence;
         }
-
-        if (watching.athleteId !== athleteId) {
+        // check if athlete has changed, or athlete time was 0 and is no longer (event has started)
+        if ((watching.athleteId !== athleteId) || ((watching.state.time > 0 ) && (prevAthleteTime == 0))){
             athleteId = watching.athleteId;     
             initHisto()
             MIN_HIST = current;
             MAX_HIST = current;
             histoData = Array(MAX_HIST+1).fill(0);
             maxtime = 0;
-            console.log("Athlete:\n",watching);
+            console.log("New athlete:\n",watching);
             ftp = watching.athlete.ftp;
             //console.log("ftp",ftp);
             getZones();
@@ -337,19 +338,21 @@ export async function main() {
             scheduleUpdate();
         }
         
-        if (watching.state.time > maxtime ) {
-            maxtime = watching.state.time;
+        if (watching.state.worldTime > maxtime + 1000 ) {
+            maxtime = watching.state.worldTime;
+            prevAthleteTime = watching.state.time;
+            if ((current != 0)) {
+                if (current > MAX_HIST) {
+                    histoData = histoData.concat(Array(current-MAX_HIST).fill(0));
+                    MAX_HIST = current;
+                }
+                if (current < MIN_HIST) {
+                    MIN_HIST = current;
+                }
 
-            if (current > MAX_HIST) {
-                histoData = histoData.concat(Array(current-MAX_HIST).fill(0));
-                MAX_HIST = current;
-            }
-            if (current < MIN_HIST) {
-                MIN_HIST = current;
-            }
-            if ((current >= MIN_HIST) && (current <= MAX_HIST)  && (current != 0)) {
                 histoData[current]++;
-                if (maxtime >= lastUpdate + refreshInterval) {
+                
+                if (maxtime >= lastUpdate + refreshInterval*1000) {
                     lastUpdate = maxtime;
                     scheduleUpdate();
                 }
